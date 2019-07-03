@@ -1,0 +1,91 @@
+# STILL IN DEVELOPMENT
+
+#Wednesday June 26th 2019
+#Mountainview CA
+#Smith - NASA Thermophere Test Probe
+#                                    Name            Contact Information
+#Calculations and Formula Research : Amanda Malnati  amalnati@smith.edu
+#                                  : Rebecca Wolf    rwolf@smith.edu
+# Program Author                   : Hannah Durkee   hannahedurkee@gmail.com
+
+
+#Assumptions
+#this program assumes you have a file called "ttpdata.txt"
+# it also assumes that the dataa inside it has acceleration, velocity, time, location
+# sample data string
+#
+
+
+def main():
+    graphdata = []
+    file = open("ttpdata.txt", "r")  # "r" for read
+
+    text = file.read()
+    text.split(",", -1)
+    numofElements = len(text)
+    pointer = 0
+
+    while numofElements >= 0:
+        numofElements = numofElements - 1
+        a = eval(text[pointer])
+        pointer = pointer +1
+        v = eval(text[pointer])
+        pointer = pointer + 1
+
+        if input("is drag constant ? type Y for yes") == "Y":
+             drag = getdensityconstantdrag(a, v)
+        else:
+            if pointer == 2 :
+                drag = getdensityconstantdrag(a, v)
+            else:
+                drag = getdensityNONconstantdrag (a, v, graphdata[-1][1])
+
+        time = eval(text[pointer])
+        pointer = pointer + 1
+        location = text[pointer]
+        pointer = pointer + 1
+        graphdata.append([time, drag, location])
+
+
+
+def getdensityconstantdrag(aceleration, velocity, isdragconstant):
+    # density found using Peterson paper
+    a = aceleration
+    v = velocity
+    mass = 2  # kg
+    crossetionalArea = .5 * 3.1459  # meter
+    dc = 0.65
+    density = (2* mass * a) /(crossetionalArea * dc * (v*v))
+
+    return density
+
+def getdensityNONconstantdrag(aceleration, velocity, density0,Tempeture):
+    #density is found using the  Robbins Sphere Data reduction
+    temp = Tempeture
+    d0 = density0
+    a = aceleration
+    v = velocity
+    mass = 2  # kg
+    crossetionalArea = .5 * 3.1459  # meter
+    #mu = 1.8 * (10**-5) #kg/ms   un comment to use a constant mu and then comment out following line
+    dc = (d0 * velocity)/getMue(temp) #uncomment to use varient mu and then comment out next line
+    density = (2 * mass * a) / (crossetionalArea * dc * (v * v))
+    return density
+
+def getMue(Tempeture):
+    #Sutherland's Law is used to find non constant mu
+    T = Tempeture
+    a = 1.47 * (10 ** -6) # kg/m s k^(1/2)
+    s = 113 # k
+    mue = ((a * (T ** (3/2)))/(T + s)) * (1 + 1.53*(10**4)*((T/s)-1)**2)
+    return mue
+
+if __name__ == "__main__":
+    main()
+
+#Refrensed Papers Citations
+#“Accuracy of Density from the ROBIN Falling Sphere”, Robert Leviton & John B.Wright
+#“A Summary of AFCRL Passive-Sphere Development Efforts and Experience”, John B.Wright
+#“High-Altitude Robin Data-Reduction Program”, James Luers and Nicholas A. Engler
+#“PAET, An Entry Probe Experiment in the Earth's Atmosphere”, Alvin Sieff
+#“A Technique for Determining Planetary Atmosphere  Structure from Measured Accelerations of an Entry Vehicle”, Victor L. Peterson
