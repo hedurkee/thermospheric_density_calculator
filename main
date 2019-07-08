@@ -1,4 +1,7 @@
 # STILL IN DEVELOPMENT
+# 07/08/19 - the code for graphing the data is still in progress
+#          - density calculation code is complete
+
 
 #Wednesday June 26th 2019
 #Mountainview CA
@@ -11,9 +14,12 @@
 
 #Assumptions
 #this program assumes you have a file called "ttpdata.txt"
-# it also assumes that the dataa inside it has acceleration, velocity, time, location
+# it also assumes that the data inside the text file has acceleration, velocity, tempeture, time,  location
 # sample data string
-#
+# 000, 000, 000, 00:00:00, N 1232 E 1234, 000, 000, 000, 00:00:00, N 1232 E 1234, ...
+
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -31,6 +37,8 @@ def main():
         pointer = pointer +1
         v = eval(text[pointer])
         pointer = pointer + 1
+        t = eval(text[pointer])
+        pointer = pointer + 1
 
         if input("is drag constant ? type Y for yes") == "Y":
              drag = getdensityconstantdrag(a, v)
@@ -38,14 +46,22 @@ def main():
             if pointer == 2 :
                 drag = getdensityconstantdrag(a, v)
             else:
-                drag = getdensityNONconstantdrag (a, v, graphdata[-1][1])
+                drag = getdensityNONconstantdrag (a, v, graphdata[-1][1], t)
 
         time = eval(text[pointer])
         pointer = pointer + 1
         location = text[pointer]
         pointer = pointer + 1
-        graphdata.append([time, drag, location])
+        graphdata.append([time, drag])
+    plt.xlabel('drag')
+    plt.ylabel('time')
+    plt.title('drag over time')
 
+    plt.plot([graphdata[0], graphdata[1], 'ro')
+    plt.axis([0, graphdata[0][-1], 0, graphdata[1][-1]])
+    plt.show()
+    plt.tight_layout()
+    plt.show()
 
 
 def getdensityconstantdrag(aceleration, velocity, isdragconstant):
