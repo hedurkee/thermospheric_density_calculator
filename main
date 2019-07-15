@@ -25,7 +25,6 @@ import matplotlib.pyplot as plt
 def main():
     graphdata = []
     file = open("ttpdata.txt", "r")  # "r" for read
-
     text = file.read()
     text.split(",", -1)
     numofElements = len(text)
@@ -43,7 +42,7 @@ def main():
         if input("is drag constant ? type Y for yes") == "Y":
              drag = getdensityconstantdrag(a, v)
         else:
-            if pointer == 2 :
+            if pointer == 2:
                 drag = getdensityconstantdrag(a, v)
             else:
                 drag = getdensityNONconstantdrag (a, v, graphdata[-1][1], t)
@@ -53,11 +52,19 @@ def main():
         location = text[pointer]
         pointer = pointer + 1
         graphdata.append([time, drag])
+    timeArray = []
+    densityArray = []
+    graphDataLength = len(graphdata)
+    x = 0;
+    while x<graphDataLength:
+        timeArray.append(graphData[0][x])
+        densityArray.append(graphData[1][x])
+    
     plt.xlabel('drag')
     plt.ylabel('time')
     plt.title('drag over time')
-
-    plt.plot([graphdata[0], graphdata[1], 'ro')
+    
+    plt.plot([timeArray, densityArray, 'ro')
     plt.axis([0, graphdata[0][-1], 0, graphdata[1][-1]])
     plt.show()
     plt.tight_layout()
@@ -69,7 +76,7 @@ def getdensityconstantdrag(aceleration, velocity, isdragconstant):
     a = aceleration
     v = velocity
     mass = 2  # kg
-    crossetionalArea = .5 * 3.1459  # meter
+    crossetionalArea = (.5 ** 2) * 3.1459  # meter
     dc = 0.65
     density = (2* mass * a) /(crossetionalArea * dc * (v*v))
 
