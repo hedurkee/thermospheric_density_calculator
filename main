@@ -59,13 +59,15 @@ def main():
     while x<graphDataLength:
         timeArray.append(graphData[0][x])
         densityArray.append(graphData[1][x])
-    
+        x++
+        
     plt.xlabel('drag')
     plt.ylabel('time')
     plt.title('drag over time')
     
+    #this code bellow is silly and definitly wrong 
     plt.plot([timeArray, densityArray, 'ro')
-    plt.axis([0, graphdata[0][-1], 0, graphdata[1][-1]])
+    #plt.axis([0, graphdata[0][-1], 0, graphdata[1][-1]])
     plt.show()
     plt.tight_layout()
     plt.show()
